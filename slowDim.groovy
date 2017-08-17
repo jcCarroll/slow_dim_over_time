@@ -25,27 +25,31 @@ definition(
 
 
 preferences {
-    section("Select dimmers to slowly dim...") {
-        input "dimmers", "capability.switchLevel", title: "Which?", required: true, multiple: true
+    	section("Select dimmers to slowly dim...") {
+    		input "dimmers", "capability.switchLevel", title: "Which?", required: true, multiple: true
+    	}
+        
+        section("Over how many minutes to dim...") {
+        	input "minutes", "number", title: "Minutes?", required: true, multiple: false
+        }
+        
+        section("Select momentary button to launch...") {
+        	input "trigger", "capability.momentary", title: "Which?", required: true
+        }
     }
-
-    section("Over how many minutes to dim...") {
-        input "minutes", "number", title: "Minutes?", required: true, multiple: false
-    }
-}
     
-def installed() {
-    initialize()
-}
-
-def updated() {
-    unsubscribe()
-    initialize()
-}
-
-def initialize() {
-    subscribe(dimmers, "switch.on", triggerHandler)
-}
+    def installed() {
+    	initialize()
+    }
+    
+    def updated() {
+    	unsubscribe()
+    	initialize()
+    }
+    
+    def initialize() {
+    	subscribe(trigger, "switch.on", triggerHandler)
+    }
     
 def triggerHandler(evt) {
     if(dimmers[0].currentSwitch == "off") state.currentLevel = 0
